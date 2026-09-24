@@ -1,21 +1,24 @@
 
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  IsNull
-} from 'typeorm';
+import { Provider } from "../../providers/entities/provider.entity";
+import { Column, ManyToOne, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Product {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   productId: string;
-  @Column({ type: 'text' })
+
+  @Column("text")
   productName: string;
-  @Column({ type: 'float' })
+
+  @Column("float")
   price: number;
-  @Column({ type: 'int' })
+
+  @Column("int")
   countSeal: number;
-  //@Column({ type: 'uuid' })
-  //provider: string;
+
+  // @Column("uuid")
+  // provider: string;
+
+  @ManyToOne(() => Provider, (provider) => provider.products)
+  provider: Provider;
 }

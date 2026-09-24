@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { Employee } from './entities/employee.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
+
 @Injectable()
 export class EmployeesService {
   constructor(
@@ -31,13 +32,17 @@ export class EmployeesService {
 
 
   async update(id: string, updateEmployeeDto: UpdateEmployeeDto) {
-   const employeeToUpdate = await this.employeeRepository.preload({
+  const employeeToUpdate = await this.employeeRepository.preload({
     employeeId: id,
-    ...updateEmployeeDto
-   }) 
-   this.employeeRepository.save(employeeToUpdate)
-   return employeeToUpdate;
+    ...updateEmployeeDto,
+  });
+
+  if (!employeeToUpdate) {
+    throw new NotFoundException(`Employee with id ${id} not found`);
   }
+
+  return this.employeeRepository.save(employeeToUpdate);
+}
 
   remove(id: string) {
     this.employeeRepository.delete({
