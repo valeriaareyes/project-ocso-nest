@@ -1,8 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn
+} from 'typeorm';
+
 import { Manager } from '../../managers/entities/manager.entity';
 import { Region } from '../../regions/entities/region.entity';
 import { Employee } from '../../employees/entities/employee.entity';
-
 
 @Entity()
 export class Location {
@@ -25,6 +33,8 @@ export class Location {
   @JoinColumn({
     name: "regionId"
   })
+  region: Region;
+  
   @OneToMany(() => Employee, (employee) => employee.location)
   employess: Employee[];
 }

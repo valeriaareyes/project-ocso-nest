@@ -1,20 +1,25 @@
-import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
+import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
+import { Location } from '../../locations/entities/location.entity';
 
 @Entity()
 export class Employee {
 
   @PrimaryGeneratedColumn('uuid')
   employeeId: string;
-
   @Column('text')
   name: string;
-
   @Column('text')
   lastName: string;
-
   @Column('text')
   phoneNumber: string;
-
   @Column('text')
   email: string;
+  @Column({
+    type: 'text',
+    nullable: true
+  })
+  photoURL: string
+
+  @ManyToOne(() =>Location, (location) => location.employess)
+  location: Location;
 }
