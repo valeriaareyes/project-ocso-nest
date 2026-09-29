@@ -8,11 +8,19 @@ import { ConfigModule } from "@nestjs/config";
 import { ProvidersModule } from './providers/providers.module';
 import { ManagersModule } from './managers/managers.module';
 import { LocationsModule } from './locations/locations.module';
+import { JwtModule } from '@nestjs/jwt';
+import { EXPIRES_IN, JWT_KEY } from './auth/constants/jwt.constants';
 import { RegionsModule } from './regions/regions.module';
 import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
+    JwtModule.register({
+      secret: JWT_KEY,
+      signOptions: {
+        expiresIn: EXPIRES_IN,
+      },
+    }),
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: "postgres",

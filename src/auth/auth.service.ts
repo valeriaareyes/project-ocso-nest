@@ -7,12 +7,16 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from "bcrypt"
 import * as jwt from 'jsonwebtoken';
+import { JwtService } from '@nestjs/jwt';
+
+
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
-    private userRepository: Repository<User>
+    private userRepository: Repository<User>,
+    private jwtService: JwtService
   ) {}
 
   registerUser(createUserDto: CreateUserDto) {
@@ -29,11 +33,18 @@ export class AuthService {
 
     const match = await bcrypt.compare(
   createUserDto.userPassword,
-  user.userPassword
+  user.userPassword,
 );
 
-if (!match) throw new UnauthorizedException('No estas autorizado');
-const token = jwt.sign(JSON.stringify(user), 'SECRET KEY');
-return token
-}
+if (!match) throw new UnauthorizedException("No estas autorizado");
+
+const payload = {
+  user: user.userEmail,
+  password: user.userPassword,
+};
+
+const token = this.jwtService.sign(payload);
+
+return token;
+  }
 }

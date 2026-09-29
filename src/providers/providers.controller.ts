@@ -2,6 +2,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException } 
 import { ProvidersService } from './providers.service';
 import { CreateProviderDto } from './dto/create-provider.dto';
 import { UpdateProviderDto } from './dto/update-provider.dto';
+import { UserData } from '../auth/decorators/user.decorator';
+import { UnauthorizedException } from '@nestjs/common';
+import { ProductsService } from '../products/products.service';
+import { User } from '../auth/entities/user.entity';
 
 @Controller('providers')
 export class ProvidersController {
@@ -12,10 +16,14 @@ export class ProvidersController {
     return this.providersService.create(createProviderDto);
   }
 
-  @Get()
-  findAll() {
-    return this.providersService.findAll();
+ @Get()
+findAll(@UserData() user: User) {
+  if (!user.userRoles.includes('admin')) {
+    throw new UnauthorizedException("No estas autorizado, solo admins");
   }
+
+  return this.providersService.findAll();
+}
 
   @Get('/name/:name')
   findByName(@Param(':name') name: string){
