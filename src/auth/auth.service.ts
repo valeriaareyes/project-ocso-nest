@@ -8,6 +8,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from "bcrypt"
 import * as jwt from 'jsonwebtoken';
 import { JwtService } from '@nestjs/jwt';
+import { LoginUserDto } from './dto/login-user.dto';
 
 
 
@@ -24,15 +25,15 @@ export class AuthService {
     return this.userRepository.save(createUserDto);
   }
 
-  async loginUser(createUserDto: CreateUserDto) {
+  async loginUser(LoginUserDto: LoginUserDto) {
     const user = await this.userRepository.findOne({
       where: {
-        userEmail: createUserDto.userEmail
+        userEmail: LoginUserDto.userEmail
       }
     });
 
     const match = await bcrypt.compare(
-  createUserDto.userPassword,
+  LoginUserDto.userPassword,
   user.userPassword,
 );
 
@@ -41,6 +42,7 @@ if (!match) throw new UnauthorizedException("No estas autorizado");
 const payload = {
   user: user.userEmail,
   password: user.userPassword,
+  userRoles: user.userRoles
 };
 
 const token = this.jwtService.sign(payload);
