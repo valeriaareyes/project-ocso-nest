@@ -9,7 +9,7 @@ import * as bcrypt from "bcrypt"
 import * as jwt from 'jsonwebtoken';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/login-user.dto';
-
+import { UpdateUserDto } from './dto/update-user.dto';
 
 
 @Injectable()
@@ -49,4 +49,15 @@ const token = this.jwtService.sign(payload);
 
 return token;
   }
+
+  async updateUser(userEmail: string, updateUserDto: UpdateUserDto){
+    const newUserData = await this.userRepository.preload({
+        userEmail,
+        ...updateUserDto
+    });
+
+    this.userRepository.save(newUserData);
+
+    return newUserData;
+}
 }
