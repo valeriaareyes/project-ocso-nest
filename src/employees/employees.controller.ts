@@ -5,12 +5,39 @@ import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { Auth } from '../auth/decorators/auth.decorator';
 import { ROLES } from '../auth/constants/roles.constants';
+import { ApiResponse } from '@nestjs/swagger';
+import { Employee } from './entities/employee.entity';
+
+
+
 @Controller('employees')
 export class EmployeesController {
   constructor(private readonly employeesService: EmployeesService) {}
-
+@Auth(ROLES.MANAGER)
+@ApiResponse({
+    status: 401,
+    description: "Missing or invalid token"
+})
+@ApiResponse({
+    status: 403,
+    description: "Missing role"
+})
+@ApiResponse({
+    status: 500,
+    description: "Internal server error"
+})
 
   @Auth(ROLES.MANAGER)
+  @ApiResponse({
+    example: {
+        employeeId: "UUID",
+        employeeName: "Karlo",
+        employeeEmail: "karlo@gmail.com",
+        employeeLastName: "Paz",
+        employeePhoneNumber: "442138841",
+    } 
+  
+})
   @Post()
   create(@Body() createEmployeeDto: CreateEmployeeDto) {
     return this.employeesService.create(createEmployeeDto);
@@ -37,6 +64,12 @@ export class EmployeesController {
   findOne(@Param('id' , new ParseUUIDPipe({version: '4'})) id: string) {
     return this.employeesService.findOne(id);
   }
+
+  @Auth(ROLES.MANAGER)
+@Get('/location/:id')
+findAllLocation(@Param('id') id: string) {
+    return this.employeesService.findByLocation(+id);
+}
 
   @Auth(ROLES.EMPLOYEE)
   @Patch(':id')

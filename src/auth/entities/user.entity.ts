@@ -21,7 +21,6 @@ export class User {
 
   @OneToOne(() => Manager)
   manager: Manager;
-  eager: true
 
   @OneToOne(() => Employee)
   employee: Employee;

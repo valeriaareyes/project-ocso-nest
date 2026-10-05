@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 @Injectable()
 export class LocationsService {
   constructor(
+    @InjectRepository(Location)
   private locationRepository: Repository<Location>
   ){}
   create(CreateLocationDto: CreateLocationDto) {
