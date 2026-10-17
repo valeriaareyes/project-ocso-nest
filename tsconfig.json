@@ -11,12 +11,40 @@
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "target": "ES2023",
-    "types": ["node", "jest", "multer"],
+    "types": [
+      "node",
+      "jest",
+      "multer"
+    ],
     "sourceMap": true,
     "outDir": "./dist",
     "incremental": true,
     "skipLibCheck": true,
     "strict": false,
-    "strictPropertyInitialization": false
-  }
+    "strictPropertyInitialization": false,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
+
